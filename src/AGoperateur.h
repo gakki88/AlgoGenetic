@@ -1,14 +1,14 @@
 /*
- * AlgoGenetic.h
+ * AGoperateur.h
  *
- *  Created on: 2018Äê1ÔÂ29ÈÕ
- *      Author: virgiliaL
+ *  Created on: 2018-1-29
+ *      Author: Jianglei, Yuxin
  */
 
-#ifndef ALGOGENETIC_H_
-#define ALGOGENETIC_H_
+#ifndef AGOPERATEUR_H_
+#define AGOPERATEUR_H_
 
-class AlgoGenetic{
+class AGoperateur{
 public:
 	void initialisation_robot(float,float,int,int,robot,int[][]);
 	float fitness_robot(int*);
@@ -28,4 +28,4 @@ private:
 
 
 
-#endif /* ALGOGENETIC_H_ */
+#endif /* AGOPERATEUR_H_ */
