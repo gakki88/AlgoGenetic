@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : AlgoGenetic.cpp
-// Author      : jianglei wang
+// Author      : jianglei, yuxin
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
@@ -13,7 +13,7 @@
 #include <string>
 using namespace std;
 
-void AlgoGenetic::initialisation_robot(float pc,float pm,int tp,int n,robot r,int p[][]){
+void AGoperateur::initialisation_robot(float pc,float pm,int tp,int n,robot r,int p[][]){
 	this->ProbaCrossover=pc;
 	this->ProbaMutate=pm;
 	this->TaillePop=tp;
@@ -36,7 +36,7 @@ void AlgoGenetic::initialisation_robot(float pc,float pm,int tp,int n,robot r,in
 	this->pop=p;
 }
 
-float AlgoGenetic::fitness_robot(int chemin[]){
+float AGoperateur::fitness_robot(int chemin[]){
 	int i=0;
 	float fitness,distance=0,f[];
 	do{
@@ -49,7 +49,7 @@ float AlgoGenetic::fitness_robot(int chemin[]){
 	return f;
 }
 
-bool AlgoGenetic::suppression(int chemin[],robot r){
+bool AGoperateur::suppression(int chemin[],robot r){
 	bool b=false;
 	int i=0,j=1;
 	do{
@@ -66,14 +66,14 @@ bool AlgoGenetic::suppression(int chemin[],robot r){
 	return b;
 }
 
-int AlgoGenetic::mutation_robot(int chemin[]){
+int AGoperateur::mutation_robot(int chemin[]){
 	if (rand()<ProbaMutate){
 		chemin[rand()%sizeof(chemin)]=rand()%100;
 	}
 	return chemin;
 }
 
-int main() {
+/*int main() {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
-}
+}*/
