@@ -20,7 +20,7 @@ private:
 	int IdProf;
 	string NomProf;
 	map<IdProf,string> Prof;
-	map<IdProf,list<string>> CoursE;
+	map<IdProf,list<int>> CoursE; //a partir d'identifiant du prof pour obtenir liste de cours(les identifiants du cours) que ce prof enseigne
 	list<int> CoursEnseigner;
 };
 

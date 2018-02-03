@@ -31,7 +31,7 @@ string Professeur::getNomP(int id){
 }
 
 list<int> Professeur::getCoursE(int id){
-	map<int,list<string> >::iterator i = CoursE.find(id);
+	map<int,list<int> >::iterator i = CoursE.find(id);
 	return i->second;
 }
 
