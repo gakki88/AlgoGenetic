@@ -1,7 +1,7 @@
 /*
  * chemin.cpp
  *
- *  Created on: 2018Äê2ÔÂ4ÈÕ
+ *  Created on: 2018Ã„Ãª2Ã”Ã‚4ÃˆÃ•
  *      Author: virgiliaL
  */
 
@@ -37,8 +37,8 @@ void chemin::insert(const int& d){
 
 }
 
-void chemin::insert_pos(const int& d,const int& d1){
-	Point * p =find(d);
+void chemin::insert_pos(int pos,const int& d1){
+	Point * p =find(pos);
 	Point * q =new Point(d1);
 	q->next = p->next;
 	p->next = q;
@@ -86,3 +86,4 @@ void chemin::setData(int pos,int d){
 		}
 	}
 }
+
