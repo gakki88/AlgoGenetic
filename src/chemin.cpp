@@ -20,7 +20,7 @@ void chemin::clear(){
 
 
 void chemin::create_Chemin(){
-	head = new Point(0);
+	head = tail =NULL;
 }
 
 void chemin::insert(const int& d){
