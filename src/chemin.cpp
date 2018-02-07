@@ -54,36 +54,25 @@ void chemin::erase(const int& d){
 
 }
 
-void chemin::updata(const int& d,const int& d1){
-	Point * p=find(d);
-	p->next->data=d1;
-}
-
 int chemin::showdata(int pos){
 	Point *p =head;
 	if(p==NULL){
-		return NULL;
+		return 0;
 	}else{
-		int position=0;
-		while(p!=NULL&&position!=pos){
-			position++;
-			p=p->next;
+		p=find(pos);
 		}
-	}
+
 	return p->data;
 }
 
 void chemin::setData(int pos,int d){
 	Point *p = head;
 	if(p!=NULL){
-		int position=0;
-		while(p!=NULL&&position!=position){
-			position++;
-			p=p->next;
-		}
+		p=find(pos);
 		if(p!=NULL){
 			p->data=d;
 		}
 	}
 }
+
 
