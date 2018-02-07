@@ -5,28 +5,37 @@
  *      Author: zoe
  */
 
-#ifndef CLASSE_H_
-#define CLASSE_H_
+#ifndef CHEMIN_H_
+#define CHEMIN_H_
+#include <iostream>
 
-class classe {
+class chemin{
 public:
-	classe();
-	int getCours(int);
-	int getProf(int);
-	int getNbEtud(int);
-	bool getEquiR(int);
-	float getDure(int);
-	int getNote(int);
-
-
+	chemin(){create_Chemin();}
+	~chemin(){clear();}
+	void create_Chemin();
+	void insert(const int&);
+	void insert_pos(int,const int&);
+	void erase(const int&);
+	int showdata(int);
+	void setData(int,int);
 private:
-	int RefCours;
-	int RefProf;
-	list<int> RefGroupe;
-	int NbEtudiant;
-	bool EquipeRequis;
-	float duree;
-	int note;
-};
+	struct Point{
+		int data;
+		Point * next;
+		Point(const int& d):data(d),next(NULL){}
+	};
+	Point * head,*tail;
+	void clear();
+	Point * find(int pos){
+		Point * p = head;
+		int position=0;
+				while(p!=NULL&&position!=pos){
+					position++;
+					p=p->next;
+				}
+		return p->next;
+	};
 
-#endif /* CLASSE_H_ */
+
+};
