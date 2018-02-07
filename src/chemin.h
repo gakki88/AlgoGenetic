@@ -1,7 +1,7 @@
 /*
  * chemin.h
  *
- *  Created on: 2018Äê2ÔÂ4ÈÕ
+ *  Created on: 2018Ã„Ãª2Ã”Ã‚4ÃˆÃ•
  *      Author: virgiliaL
  */
 
@@ -15,7 +15,7 @@ public:
 	~chemin(){clear();}
 	void create_Chemin();
 	void insert(const int&);
-	void insert_pos(const int&,const int&);
+	void insert_pos(int,const int&);
 	void erase(const int&);
 	void updata(const int&,const int&);
 	int showdata(int);
@@ -28,12 +28,13 @@ private:
 	};
 	Point * head,*tail;
 	void clear();
-	Point * find(const int& d){
+	Point * find(int pos){
 		Point * p = head;
-		for(;p;p=p->next){
-			if(p->next->data==d)
-				break;
-		}
+		int position=0;
+				while(p!=NULL&&position!=pos){
+					position++;
+					p=p->next;
+				}
 		return p->next;
 	};
 
