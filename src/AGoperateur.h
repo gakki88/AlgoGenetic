@@ -17,6 +17,12 @@ public:
 	int crossover_robot(int*,int*);
 	int mutation_robot(int*);
 	bool suppression(int*,robot);
+	
+	vector<chemin> CreerPopulation();
+	vector<chemin> selection();
+	chemin croisement_EdT(chemin, chemin);
+	void mutation_EdT(chemin);
+	int fitness_EdT(chemin);
 
 private:
 	float ProbaCrossover;
