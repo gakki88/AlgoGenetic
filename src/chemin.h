@@ -14,12 +14,11 @@ public:
 	chemin(){create_Chemin();}
 	~chemin(){clear();}
 	void create_Chemin();
-	void insert(const int&);
-	void insert_pos(int,const int&);
-	void erase(const int&);
-	void updata(const int&,const int&);
-	int showdata(int);
-	void setData(int,int);
+	void insert(const int&);//一个一个插入结点
+	void insert_pos(int,const int&);//在第n号位置后面插入一个数值为d的结点
+	void erase(int);//删除第n个位置上的结点
+	int showdata(int);//查看第n号位置上的数
+	void setData(int,int);//修改第n号位置上的数
 private:
 	struct Point{
 		int data;
@@ -35,12 +34,9 @@ private:
 					position++;
 					p=p->next;
 				}
-		return p->next;
+		return p;
 	};
 
 
 };
 
-
-
-#endif /* CHEMIN_H_ */
