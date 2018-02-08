@@ -44,14 +44,20 @@ void chemin::insert_pos(int pos,const int& d1){
 	p->next = q;
 }
 
-void chemin::erase(const int& d){
+void chemin::erase(int pos){
 	Point * p ;
-	Point * q ;
-	p=find(d);
-	q=p->next;
-	p->next = p->next->next;
-	delete q;
-
+		Point * q ;
+		int i=pos-1;
+		if (pos==0){
+			q=head;
+			head=head->next;
+			delete q;
+		}else{
+		p=find(i);
+		q=p->next;
+		p->next = p->next->next;
+		delete q;
+		}
 }
 
 int chemin::showdata(int pos){
