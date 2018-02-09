@@ -10,13 +10,13 @@
 
 class AGoperateur{
 public:
-	void initialisation_robot(float,float,int,int,robot,int[][]);
-	float fitness_robot(int*);
-	int insertion(int*);
-	void selection_robot(float);
-	int crossover_robot(int*,int*);
-	int mutation_robot(int*);
-	bool suppression(int*,robot);
+	void initialisation_robot(float,float,int,int,robot);
+	float fitness_robot(int);
+	chemin insertion(int,robot);
+	int selection_robot(float);
+	chemin crossover_robot(chemin,chemin,);
+	chemin mutation_robot(int a);
+	bool suppression(int);
 	
 	vector<chemin> CreerPopulation();
 	vector<chemin> selection();
@@ -29,7 +29,9 @@ private:
 	float ProbaMutate;
 	int TaillePop;
 	int N;
-	int pop[][];
+	chemin pop[TaillePop];
+	float dis[TaillePop];
+	float fit[TaillePop];
 };
 
 
