@@ -1,7 +1,7 @@
 /*
  * gene.h
  *
- *  Created on: 2018Äê1ÔÂ29ÈÕ
+ *  Created on: 2018Ã„Ãª1Ã”Ã‚29ÃˆÃ•
  *      Author: virgiliaL
  */
 
@@ -17,8 +17,12 @@ public:
 	void init_robot(int,int,int*);
 	void plot(int*);
 	bool isObstacles(int);
+	bool passObstacles(int,int);
+	bool estVoisin(int,int);
 	int getEntre();
 	int getSortie();
+	int max(int,int);
+	int min(int,int);
 
 private:
 	int entre;
