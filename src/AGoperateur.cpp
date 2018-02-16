@@ -12,6 +12,7 @@
 #include <typeinfo>
 #include <string>
 #include <ctime>
+#include "gene.h"
 using namespace std;
 
 void AGoperateur::initialisation_robot(float pc,float pm,int tp,int n,robot r){
@@ -19,6 +20,15 @@ void AGoperateur::initialisation_robot(float pc,float pm,int tp,int n,robot r){
 	this->ProbaMutate=pm;
 	this->TaillePop=tp;
 	this->N=n;
+	try{
+		while(true){
+	this->pop=new chemin[tp];
+	this->fit=new float[tp];
+	this->dis=new float[tp];
+		}
+	}catch(const std::bad_alloc& e){
+		std::cout << "Allocation failed: " << e.what() << '\n';
+	}
 	int a,b,i,j=1;
 	chemin p[tp];
 	srand(time(0));
@@ -29,7 +39,7 @@ void AGoperateur::initialisation_robot(float pc,float pm,int tp,int n,robot r){
 			do{
 				do{
 				b=rand()%100+1;
-				}while(r.isObstacles(b)==true);
+				}while(r.isObstacles(b)==true||suppression(p[i],b));
 				p[i].insert(b);
 				j++;
 			}while(j<=a);
@@ -40,21 +50,35 @@ void AGoperateur::initialisation_robot(float pc,float pm,int tp,int n,robot r){
 	this->pop=p;
 }
 
-float AGoperateur::fitness_robot(int a){
+float* AGoperateur::fitness_robot(int a,robot r){
 	int i=0;
-	float fitness,distance=0,f[2];
+	bool bad_line=false;
+	float fitness,distance=0;
+	float* f=new float[2];
+	while(i!=99||bad_line==false){
+		if (r.passObstacles(pop[a].showdata(i),pop[a].showdata(i+1))){
+					bad_line=true;
+				}
+		i++;
+	}
+	i=0;
+	if(bad_line==false){
 	do{
 		distance=sqrt(pow((int)(pop[a].showdata(i+1)-1/10)-(int)(pop[a].showdata(i)-1/10),2)+pow(pop[a].showdata(i+1)-1%10-pop[a].showdata(i)-1%10,2))+distance;
 		i++;
-	}while(pop[a].showdata(i+1)!=0|i!=99);
+	}while(pop[a].showdata(i+1)!=0||i!=99||bad_line==false);
+
 	fitness=(1+1/sqrt(i))/distance;
 	f[0]=dis[a]=distance;
 	f[1]=fit[a]=fitness;
-
+	}else{
+		f[0]=dis[a]=0;
+		f[1]=fit[a]=pow(10,-6);
+	}
 	return f;
 }
 
-int AGoperateur::selection_robot(float f){
+int AGoperateur::selection_robot(){
 	int i,b[TaillePop+1],p,t=0;
 	float sum=0;
 	b[0]=0;
@@ -72,106 +96,75 @@ int AGoperateur::selection_robot(float f){
 	return t-1;
 }
 
+chemin* AGoperateur::crossover_robot(chemin c1,chemin c2){
+	chemin* child=new chemin[2];
+	int p1,p2;
+	srand(time(NULL));
+	if(rand()/float(RAND_MAX)<ProbaCrossover){
+	p1=rand()%c1.longeur();
+	p2=rand()%c2.longeur();
+	for(int i=0;i<p1;i++){
+	child[0].insert(c1.showdata(i));
+	}
+	for(int i=p2;i<c2.longeur();i++){
+		child[0].insert(c2.showdata(i));
+	}
+	for(int i=0;i<p2;i++){
+		child[1].insert(c2.showdata(i));
+	}
+	for(int i=p1;i<c1.longeur();i++){
+		child[1].insert(c1.showdata(i));
+	}
+	}else{
+		child[0]=c1;
+		child[1]=c2;
+	}
 
-bool AGoperateur::suppression(int a){
-	bool b=false;
-	int i=0,j=1;
+	return child;
+}
+
+/*chemin AGoperateur::insertion(int a,robot r){
+	int i=0;
 	do{
-		do{
-			if (pop[a].showdata(i)==pop[a].showdata(j)){
+		if(r.passObstacles(pop[a].showdata(i),pop[a].showdata(i+1))){
+
+
+		}
+	}while(pop[a].showdata(i+1)!=0);
+
+	return pop;
+}*/
+
+bool AGoperateur::suppression(chemin c,int a){
+	bool b=false;
+	int i=0;
+	do{
+
+			if (c.showdata(i)==a){
 				b=true;
 			}
-			else {
-				j++;
-			}
-		}while(pop[a].showdata!=0|b==true);
+
+
 		i++;
-	}while(b==true|pop[a].showdata(i+1)!=0);
+	}while(b==false||c.showdata(i+1)!=0);
 
 	return b;
 }
 
-chemin AGoperateur::mutation_robot(int a){
+chemin AGoperateur::mutation_robot(chemin c){
 	srand(time(0));
 	int i=0,p;
 	do{
 	if (rand()/float(RAND_MAX)<ProbaMutate){
 		do{
 			p=rand()%100+1;
-			pop[a].setData(i,p);
-		}while(suppression(i));
+
+		}while(suppression(c,p));
+		c.setData(i,p);
 	}
 	i++;
-	}while(pop[a].showdata(i)!=0);
-	return pop;
-}
-
-vector<chemin> AGoperateur::CreerPopulation(){
-	vector<chemin> pop;
-	vector<int> myVec;
-	chemin c;
-
-	for(int n=0;n<100;n++){
-
-		for (int i=1; i<28; ++i) myVec.push_back(i);
-		random_shuffle ( myVec.begin(), myVec.end());
-		for (std::vector<int>::iterator it=myVec.begin(); it!=myVec.end(); ++it)
-		    	c.insert((int) *it);
-
-		pop.push_back(c);
-		c.clear();
-
-	}
-
-	return pop;
-}
-
-vector<chemin> AGoperateur::selection(vector<chemin> pop){
-	vector<chemin> selected;
-	int randIndex;
-
-	for (int i=0;i<9;i++){
-
-		randIndex = rand()%100;
-		selected.push_back(pop[randIndex]);
-
-	}
-
-	return selected;
-
-}
-
-chemin AGoperateur::croisement_EdT(chemin c1,chemin c2){
-	chemin cEnfant;
-	int randIndex;
-
-	randIndex = rand()%27;
-
-
-	for(int i=0;i<randIndex;i++){
-		cEnfant.insert(c1.showdata(i));
-		for(int j=0;j<27;j++){
-			if(c2.showdata(j)==c1.showdata(i)){
-				c2.erase(j);
-			}
-		}
-	}
-
-	concat(cEnfant,c2);
-
-	return cEnfant;
-}
-
-void AGoperateur::mutation_EdT(chemin c){
-	int r1,r2;
-
-	r1=rang()%27;
-	r2=rand()%27;
-
-	c.insert_pos(c.showdata(r2),r1);
-	c.insert_pos(c.showdata(r1+1),r2+1);
-	c.erase(r1+1);
-	c.erase(r2+1);
+	}while(c.showdata(i)!=0);
+	return c;
 }
 
 void AGoperateur::evolve(){
@@ -186,6 +179,8 @@ void AGoperateur::evolve(){
 		p=rand()%TaillePop;
 		child[i]=crossover_robot(newPop[i],newPop[p])[0];
 		child[i+1]=crossover_robot(newPop[i],newPop[p])[1];
+		child[i]=mutation_robot(child[i]);
+		child[i+1]=mutation_robot(child[i+1]);
 	}
 	this->pop=child;
 }
