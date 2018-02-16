@@ -174,8 +174,52 @@ void AGoperateur::mutation_EdT(chemin c){
 	c.erase(r2+1);
 }
 
+void AGoperateur::evolve(){
+	chemin newPop[TaillePop],child[TaillePop];
+	chemin c1,c2;
+	int p;
+	srand(time(0));
+	for(int i=0;i<TaillePop;i++){
+		newPop[i]=pop[selection_robot()];
+	}
+	for(int i=0;i<TaillePop;i+=2){
+		p=rand()%TaillePop;
+		child[i]=crossover_robot(newPop[i],newPop[p])[0];
+		child[i+1]=crossover_robot(newPop[i],newPop[p])[1];
+	}
+	this->pop=child;
+}
 
-/*int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+chemin AGoperateur::getChemin(int a){
+	return pop[a];
+}
+
+int main() {
+	robot r;
+	int o[23]={4,9,10,11,14,17,20,27,30,33,34,44,49,57,62,65,77,78,82,87,88,92,96};
+	r.init_robot(1,100,o);
+	float pc=0.7;
+	float pm=0.001;
+	int tp=20;
+	int N=50;
+	int i=0;
+	AGoperateur ag;
+	ag.initialisation_robot(pc,pm,tp,N,r);
+	while(i<50){
+		ag.evolve();
+	}
+	float j=0,t;
+	for(i=0;i<tp;i++){
+		if(j<ag.fitness_robot(i,r)[1]){
+			j=ag.fitness_robot(i,r)[1];
+			t=i;
+		}
+	}
+	int a=0;
+	cout<<"{";
+	do{
+		cout<<ag.getChemin(t).showdata(a)<<",";
+		a++;
+	}while(ag.getChemin(t).showdata(i)!=0);
 	return 0;
-}*/
+}
