@@ -7,18 +7,18 @@
 
 #include <iostream>
 #include "math.h"
-#include "gene.h"
+#include "robot.h"
 using namespace std;
 
-void robot::init_robot(int e,int s,int o[]){
+void robot::init_robot(int e,int s){
 	this->entre=e;
 	this->sortie=s;
-	this->obstacles=o;
 }
 
 bool robot::isObstacles(int chemin){
 	bool b=false;
 	int i=0;
+	int s=sizeof(obstacles)/sizeof(obstacles[0]);
 	do{
 		if (obstacles[i]==chemin){
 			b=true;
@@ -26,12 +26,12 @@ bool robot::isObstacles(int chemin){
 		else{
 			i++;
 		}
-	}while(b==true|i==sizeof(obstacles)+1);
+	}while(b==false&&i<s);
 	return b;
 }
 
 bool robot::estVoisin(int a,int b){
-	if(a==b+10|a==b-10|a==b+1|a==b-1){
+	if(a==b+10||a==b-10||a==b+1||a==b-1){
 		return true;
 	}
 	else{
@@ -60,7 +60,8 @@ int robot::min(int a,int b){
 
 bool robot::passObstacles(int p1,int p2){
 	bool bo=false;
-	int ob[][],i=0;
+	int i=0;
+	int s=sizeof(obstacles)/sizeof(obstacles[0]);
 	int ox1,ox2,ox3,ox4,oy1,oy2,oy3,oy4;
 	float x1,x2,y1,y2,a,b;
 	x1=p1%10+0.5;
@@ -83,13 +84,14 @@ bool robot::passObstacles(int p1,int p2){
 			oy2=oy1+1;
 			oy3=oy1;
 			oy4=oy2;
-			if((a*ox1+b-oy1)*(a*ox2+b-oy2)<0||(a*ox1+b-oy1)*(a*ox3+b-oy3)<0||(a*ox1+b-oy1)*(a*ox4+b-oy4)<0){
+			if((a*ox1+b-oy1)*(a*ox2+b-oy2)<0||(a*ox1+b-oy1)*(a*ox3+b-oy3)<0||(a*ox1+b-oy1)*(a*ox4+b-oy4)<0||(a*ox2+b-oy2)*(a*ox3+b-oy3)<0
+					||(a*ox2+b-oy2)*(a*ox4+b-oy4)<0||(a*ox3+b-oy3)*(a*ox4+b-oy4)<0){
 				bo=true;
 			}
 		}
 		i++;
 
-	}while(bo==true|i==sizeof(obstacles));
+	}while(bo==false&&i<s);
 		return bo;
 
 }
@@ -101,3 +103,4 @@ int robot::getEntre(){
 int robot::getSortie(){
 	return sortie;
 }
+
