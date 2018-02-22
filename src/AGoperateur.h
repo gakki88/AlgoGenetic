@@ -8,32 +8,40 @@
 #ifndef AGOPERATEUR_H_
 #define AGOPERATEUR_H_
 
+#include"chemin.h"
+#include "robot.h"
+
 class AGoperateur{
 public:
-	void initialisation_robot(float,float,int,int,robot);
-	float fitness_robot(int);
-	chemin insertion(int,robot);
-	int selection_robot(float);
-	chemin crossover_robot(chemin,chemin,);
-	chemin mutation_robot(int a);
-	bool suppression(int);
-	
-	vector<chemin> CreerPopulation();
-	vector<chemin> selection();
-	chemin croisement_EdT(chemin, chemin);
-	void mutation_EdT(chemin);
-	int fitness_EdT(chemin);
+
+	void initialisation_robot(float,float,int,robot);
+	float getProbacross();
+	void fitness_robot(robot);
+	void supprimer(chemin&);
+	int calculFit(chemin,robot);
+	//chemin insertion(int,robot);
+	int selection_robot();
+	void crossover_robot(chemin&,chemin&);
+	void mutation_robot(chemin&);
+	bool suppression(chemin&,int);
+	void evolve(robot);
+	chemin getChemin(int);
+	void getFit();
+	~AGoperateur(){
+		//delete [] pop;
+	}
+
 
 private:
 	float ProbaCrossover;
 	float ProbaMutate;
 	int TaillePop;
-	int N;
-	chemin pop[TaillePop];
-	float dis[TaillePop];
-	float fit[TaillePop];
+	chemin* pop;
+	float dis[200];
+	float fit[200];
 };
 
 
 
+#endif /* AGOPERATEUR_H_ */
 #endif /* AGOPERATEUR_H_ */
