@@ -300,3 +300,222 @@ int main() {
 
 	return 0;
 }
+
+void AGoperateur_EdT::SetParam(float pc,float pm,int n){
+	this->ProbaCrossover=pc;
+	this->ProbaMutate=pm;
+	//this->TaillePop=tp;
+	this->N=n;
+}
+
+int AGoperateur_EdT::selection(){
+	int i,t=0;
+	float sum=0,p(0);
+	float b[100];
+	b[0]=0;
+	for(i=0;i<100;i++){
+		sum=sum+fit.at(i);
+	}
+	//cout<<"sum = "<<sum<<"\n b : ";
+	for(i=0;i<100;i++){
+		b[i+1]=b[i]+fit.at(i)/sum;
+		//cout<<b[i+1]<<" ";
+	}
+	//srand(time(0));
+	p=rand()%100;
+	p=p/100;
+	//cout<<"\n p = "<<p<<endl;
+	while(p>b[t]){
+		t++;
+	}
+	//delete[] b;
+	return t-1;
+}
+
+
+void AGoperateur_EdT::initialisation_EdT(EdT e){
+
+	int a,b,i,j=1;
+	vector<vector<int>> p;
+	vector<int> UnGene;
+	std::vector<int> arrayNumero;
+
+	p.clear();
+	p.reserve(100);
+
+	srand(time(0));
+
+	for(i=0;i<100;i++){
+		UnGene.clear();
+		UnGene.reserve(28);
+		arrayNumero.clear();
+		arrayNumero.reserve(70);
+
+		cout<<"entrer dans 1er loop "<<i<<" fois"<<endl;
+		b = 70;
+		//initiale un tableau de numero a choisir
+		for (int i=1; i<71; i++) {arrayNumero.push_back(i);}
+		/*cout<<"finir le 2eme loop"<<endl;
+		cout<<"arrayNum = ";
+		for (vector<int>::iterator it=arrayNumero.begin();it!=arrayNumero.end();it++){
+			cout<<(*it)<<" ";
+		}
+		cout<<endl;*/
+		//creer un gene
+		for(j=0;j<28;j++){
+			//cout<<"entrer dans 3eme loop "<<j<<" fois"<<endl;
+			//a = rand()%b; //random un index de 0 a b
+			//UnGene.insert((int) arrayNumero.at(a)); //inserer dans le gene le numero indice a
+			if(e.getClasse().at(j).getDure()==2){ //verifier si c'est une case pour un cours duree 2 heures
+				do{a = rand()%b;//random un index de 0 a b
+				}while(e.isObstacles((int)arrayNumero.at(a)));
+
+//cout<<"le a = "<<a<<" et numero = "<<arrayNumero.at(a)<<" et b ="<<b;
+				UnGene.push_back((int) arrayNumero.at(a));//inserer dans le gene le numero indice a
+				if(a==arrayNumero.size()-1){
+					arrayNumero.erase(arrayNumero.begin()+a);
+					b--;
+				}else{
+					if(arrayNumero.at(a+1) ==arrayNumero.at(a)+1){
+						arrayNumero.erase(arrayNumero.begin()+a); //si oui, on supprime deux numeros successives dans le tableau arrayNum
+						arrayNumero.erase(arrayNumero.begin()+a);
+						b=b-2;}
+					else{
+						arrayNumero.erase(arrayNumero.begin()+a);
+						b--;
+					}
+				}
+
+			}
+			//if(e.getClasse().at(j).getDure()==1){//si c'est une case de gene pour un cours duree 1 heure
+			else
+				{a = rand()%b;//random un index de 0 a b
+				//cout<<"le a = "<<a<<" et numero = "<<arrayNumero.at(a)<<"et b ="<<b;
+				UnGene.push_back((int) arrayNumero.at(a));//inserer dans le gene le numero indice a
+				arrayNumero.erase(arrayNumero.begin()+a); //on supprime juste un numero dans le tableau arrayNum
+				b=b-1;
+			}
+			/*cout<<"arrayNum = ";
+			for (vector<int>::iterator it=arrayNumero.begin();it!=arrayNumero.end();it++){
+				cout<<(*it)<<" ";
+			}
+			cout<<endl;*/
+
+		}
+
+		p.push_back(UnGene);
+		cout<<"un gene : ";
+		for (vector<int>::iterator it=UnGene.begin();it!=UnGene.end();it++){
+						cout<<(*it)<<" ";
+					}
+					cout<<endl;
+		cout<<"avoir un gene "<<i<<endl;
+	}
+	cout<<"sortir de 1er loop"<<endl;
+
+	/*for(int n=0;n<100;n++){
+
+		for (int i=1; i<28; ++i) myVec.push_back(i);
+		random_shuffle ( myVec.begin(), myVec.end());
+		for (std::vector<int>::iterator it=myVec.begin(); it!=myVec.end(); ++it)
+		    	c.insert((int) *it);
+
+		p.push_back(c);
+		c.clear();
+
+	}*/
+
+	this->pop = p;
+}
+
+
+vector<vector<int>> AGoperateur_EdT::croisement_EdT(EdT e,vector<int> c1,vector<int> c2){
+	vector<int> temp1,temp2;
+	vector<vector<int>> Enfant;
+	int randIndex;
+
+	Enfant.reserve(2);
+	if((int)rand()%100 > ProbaCrossover*100){
+		Enfant.push_back(c1);
+		Enfant.push_back(c2);
+	}else{
+//obtenir un point de coupture aleatoire
+		randIndex = rand()%28;
+
+		temp1 = c1;
+		temp2 = c2;
+
+		swap_ranges(temp1.begin()+randIndex, temp1.end(), temp2.begin()+randIndex);
+
+		Enfant.push_back(temp1);
+		Enfant.push_back(temp2);
+	}
+	return Enfant;
+}
+
+void AGoperateur_EdT::mutation_EdT(vector<int> c){
+	int r1,r2;
+
+	if(rand()%100<ProbaMutate*100){
+
+	r1=rand()%28;
+	r2=rand()%28;
+
+	swap_ranges(c.begin()+r1, c.begin()+r1, c.begin()+r2);
+	}
+}
+
+void AGoperateur_EdT::evolve(EdT e){
+	vector<vector<int>> newPop,child;
+	vector<int> c1,c2;
+	int p;
+
+	newPop.clear();
+	child.clear();
+	newPop.reserve(100);
+	child.reserve(100);
+	//srand(time(0));
+	for(int i=0;i<100;i++){
+		int r=selection();
+		newPop.push_back(pop.at(r));
+		cout<<i<<" r = "<<r<<" ";
+
+	}
+	cout<<"sortir 1er for"<<endl;
+	for(int i=0;i<100;i+=2){
+		p=rand()%100;
+		child.push_back(croisement_EdT(e,newPop[i],newPop[p]).at(0));
+		mutation_EdT(child.at(i));
+		child.push_back(croisement_EdT(e,newPop[i],newPop[p]).at(1));
+		mutation_EdT(child.at(i+1));
+	}
+	cout<<"sortir 2eme for"<<endl;
+	this->pop = child;
+	fitness(e);
+}
+
+
+/*float AGoperateur_EdT::fitness_EdT(EdT e,vector<int> c){
+
+		e.calculScore(c);
+	return e.getScore();
+}*/
+void AGoperateur_EdT::fitness(EdT e){
+	int i(0);
+	vector<int> gene;
+	fit.clear();
+	fit.reserve(100);
+	for(i=0;i<pop.size();i++){
+		gene=pop.at(i);
+		/*cout<<i<<" ieme gene= ";
+		for (vector<int>::iterator it=gene.begin();it!=gene.end();++it){
+					cout<<(*it)<<" ";
+				}
+		cout<<endl;*/
+		e.calculScore(gene);
+		this->fit.push_back(e.getScore());
+		//cout<<fit.at(i)<<endl;
+
+	}
+
+}
